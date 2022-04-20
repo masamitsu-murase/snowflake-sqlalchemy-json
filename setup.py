@@ -23,7 +23,7 @@ setup(
     zip_safe=True,
     python_requires='>=3.7.*, <4',
     install_requires=['snowflake-sqlalchemy'],
-    extras_require={'test': []},
+    extras_require={'test': [], 'package': ['wheel', 'twine']},
     project_urls={
         'Bug Reports':
         'https://github.com/masamitsu-murase/snowflake-sqlalchemy-json/issues',
