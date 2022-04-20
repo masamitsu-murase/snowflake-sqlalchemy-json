@@ -4,6 +4,8 @@ from sqlalchemy.sql import sqltypes
 from sqlalchemy.sql.functions import GenericFunction
 from typing import Optional
 
+__all__ = ["register"]
+
 
 class flatten(GenericFunction):
     type = sqltypes.TableValueType(Column("seq", type_=Integer),
