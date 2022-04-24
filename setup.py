@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 from os import path
 
 here = path.abspath(path.dirname(__file__))
@@ -18,7 +18,8 @@ setup(
     author_email='masamitsu.murase@gmail.com',
     license='MIT',
     keywords='snowflake sqlalchemy',
-    py_modules=["snowflake_sqlalchemy_json"],
+    # py_modules=["snowflake_sqlalchemy_json"],
+    packages=find_packages("src"),
     package_dir={"": "src"},
     zip_safe=True,
     python_requires='>=3.7.*, <4',
