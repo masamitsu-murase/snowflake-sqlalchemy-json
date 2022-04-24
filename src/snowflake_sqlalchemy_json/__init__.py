@@ -4,7 +4,7 @@ from sqlalchemy.sql import sqltypes
 from sqlalchemy.sql.functions import GenericFunction
 from typing import Optional
 
-__all__ = ["register"]
+__all__ = ["register_json_handler"]
 
 
 class flatten(GenericFunction):
@@ -77,7 +77,7 @@ def visit_json_getitem_op_binary(self, binary, operator, **kw):
     return "GET(%s, %s)" % expr
 
 
-def register():
+def register_json_handler():
     functions = [
         visit_flatten_func,
         visit_json_getitem_op_binary,
