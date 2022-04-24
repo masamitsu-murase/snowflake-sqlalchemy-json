@@ -1,4 +1,5 @@
 from snowflake.sqlalchemy.base import SnowflakeCompiler as SC
+from snowflake.sqlalchemy.snowdialect import SnowflakeDialect as SD
 from sqlalchemy import Column, Integer, JSON, String
 from sqlalchemy.sql import sqltypes
 from sqlalchemy.sql.functions import GenericFunction
@@ -77,7 +78,7 @@ def visit_json_getitem_op_binary(self, binary, operator, **kw):
     return "GET(%s, %s)" % expr
 
 
-def register_json_handler():
+def register_json_handler(include_snowflake_sqlalchemy_patch=True):
     functions = [
         visit_flatten_func,
         visit_json_getitem_op_binary,
@@ -86,3 +87,10 @@ def register_json_handler():
         name = function.__name__
         if not hasattr(SC, name):
             setattr(SC, name, function)
+
+    if not hasattr(SD, "_json_serializer"):
+        setattr(SD, "_json_serializer", None)
+
+    if include_snowflake_sqlalchemy_patch:
+        if "supports_statement_cache" not in SD.__dict__:
+            setattr(SD, "supports_statement_cache", False)
