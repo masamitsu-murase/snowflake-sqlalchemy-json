@@ -88,8 +88,9 @@ def register_json_handler(include_snowflake_sqlalchemy_patch=True):
         if not hasattr(SC, name):
             setattr(SC, name, function)
 
-    if not hasattr(SD, "_json_serializer"):
-        setattr(SD, "_json_serializer", None)
+    for json_converter in ["_json_serializer", "_json_deserializer"]:
+        if not hasattr(SD, json_converter):
+            setattr(SD, json_converter, None)
 
     if include_snowflake_sqlalchemy_patch:
         if "supports_statement_cache" not in SD.__dict__:
