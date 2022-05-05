@@ -79,6 +79,11 @@ def visit_json_getitem_op_binary(self, binary, operator, **kw):
 
 
 def register_json_handler(include_snowflake_sqlalchemy_patch=True):
+    """Register JSON handler to use JSON accessor and func.flatten.
+
+    :param include_snowflake_sqlalchemy_patch: If yes, apply some patches,
+        defaults to True
+    """
     functions = [
         visit_flatten_func,
         visit_json_getitem_op_binary,
