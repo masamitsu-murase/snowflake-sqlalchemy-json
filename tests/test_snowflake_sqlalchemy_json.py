@@ -35,11 +35,30 @@ class SnowflakeSqlalchemyJsonTest(unittest.TestCase):
             editors.c.value["name"],
         ).select_from(Book).join(
             editors,
-            editors.c.value["type"] == "chief"
+            editors.c.value["type"] == "chief",
         ).order_by(editors.c.value["name"].desc())
         sql = self.compile_statement(query)
         expected_sql = """\
         SELECT prefix1.prefix2.book.title, GET(anon_2.value, 'name') AS anon_1 
         FROM prefix1.prefix2.book JOIN LATERAL flatten(INPUT => (GET(prefix1.prefix2.book.json_data, %(json_data_1)s))) AS anon_2 ON GET(anon_2.value, 'type') = 'chief' ORDER BY GET(anon_2.value, 'name') DESC
-        """
+        """  # noqa
+        self.assertEqual(sql, textwrap.dedent(expected_sql).rstrip())
+
+        editors = func.flatten(Book.json_data,
+                               path="editors",
+                               recursive=False,
+                               outer=False,
+                               mode="BOTH").lateral()
+        query = select(
+            Book.title,
+            editors.c.value["name"],
+        ).select_from(Book).join(
+            editors,
+            editors.c.value["type"] == "chief",
+        ).order_by(editors.c.value["name"].desc())
+        sql = self.compile_statement(query)
+        expected_sql = """\
+        SELECT prefix1.prefix2.book.title, GET(anon_2.value, 'name') AS anon_1 
+        FROM prefix1.prefix2.book JOIN LATERAL flatten(INPUT => (prefix1.prefix2.book.json_data), PATH => 'editors', OUTER => FALSE, RECURSIVE => FALSE, MODE => 'BOTH') AS anon_2 ON GET(anon_2.value, 'type') = 'chief' ORDER BY GET(anon_2.value, 'name') DESC
+        """  # noqa
         self.assertEqual(sql, textwrap.dedent(expected_sql).rstrip())
