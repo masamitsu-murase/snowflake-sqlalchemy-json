@@ -22,7 +22,7 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     zip_safe=True,
-    python_requires='>=3.7.*, <4',
+    python_requires='>=3.7, <4',
     install_requires=['snowflake-sqlalchemy'],
     extras_require={'test': [], 'package': ['wheel', 'twine']},
     project_urls={
